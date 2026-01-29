@@ -14,26 +14,14 @@ return new class extends Migration
             $table->foreignId('company_id')
                 ->nullable()
                 ->constrained('companies')
-                ->onDelete('cascade');
+                ->cascadeOnDelete();
 
             $table->enum('tipe', ['informasi', 'berita']);
             $table->string('judul');
             $table->text('isi_konten')->nullable();
             $table->string('gambar')->nullable();
-            $table->string('upload_file')->nullable(); // file tambahan (opsional)
-
-            // Kolom baru
-            $table->date('tanggal_publikasi')->nullable()->after('upload_file');
-
-            $table->foreignId('created_by')
-                ->nullable()
-                ->constrained('users')
-                ->onDelete('set null');
-
-            $table->foreignId('updated_by')
-                ->nullable()
-                ->constrained('users')
-                ->onDelete('set null');
+            $table->string('upload_file')->nullable();
+            $table->date('tanggal_publikasi')->nullable();
 
             $table->timestamps();
         });

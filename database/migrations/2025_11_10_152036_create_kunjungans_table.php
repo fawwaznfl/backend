@@ -11,25 +11,29 @@ return new class extends Migration
         Schema::create('kunjungans', function (Blueprint $table) {
             $table->id();
 
-            // 🔹 Relasi utama
             $table->foreignId('company_id')
                 ->nullable()
                 ->constrained('companies')
                 ->onDelete('cascade');
+
             $table->foreignId('pegawai_id')
                 ->nullable()
                 ->constrained('pegawais')
                 ->onDelete('cascade');
 
-            // 🔹 Data kunjungan
-            $table->string('upload_foto')->nullable(); 
-            $table->text('keterangan')->nullable();    
+            $table->string('upload_foto')->nullable();
+            $table->string('lokasi_masuk')->nullable();
+            $table->text('keterangan')->nullable();
 
-            // 🔹 Audit
+            $table->string('foto_keluar')->nullable();
+            $table->string('lokasi_keluar')->nullable();
+            $table->text('keterangan_keluar')->nullable();
+
             $table->foreignId('created_by')
                 ->nullable()
                 ->constrained('pegawais')
                 ->nullOnDelete();
+
             $table->foreignId('updated_by')
                 ->nullable()
                 ->constrained('pegawais')

@@ -6,49 +6,62 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Jalankan migration untuk membuat tabel cutis.
-     */
     public function up(): void
     {
         Schema::create('cutis', function (Blueprint $table) {
             $table->id();
 
-            // 🔹 Relasi utama
-            $table->foreignId('company_id')->nullable()->constrained('companies')->onDelete('cascade');
-            $table->foreignId('pegawai_id')->nullable()->constrained('pegawais')->onDelete('cascade');
+            $table->foreignId('company_id')
+                ->nullable()
+                ->constrained('companies')
+                ->cascadeOnDelete();
 
-            // 🔹 Informasi cuti
+            $table->foreignId('pegawai_id')
+                ->nullable()
+                ->constrained('pegawais')
+                ->cascadeOnDelete();
+
             $table->enum('jenis_cuti', [
-                'tahunan',
+                'cuti',
+                'izin_masuk',
+                'izin_telat',
+                'izin_pulang_cepat',
                 'sakit',
                 'melahirkan',
-                'penting',
-                'lainnya'
-            ])->default('tahunan');
+            ])->default('cuti');
+
             $table->date('tanggal_mulai');
             $table->date('tanggal_selesai');
-            $table->integer('jumlah_hari')->nullable();
+
             $table->text('alasan')->nullable();
+            $table->text('catatan')->nullable();
 
-            // 🔹 Bukti pendukung
-            $table->string('lampiran')->nullable(); // upload file surat dokter, surat izin, dsb
+            $table->string('foto')->nullable();
+            $table->enum('status', [
+                'menunggu',
+                'disetujui',
+                'ditolak',
+            ])->default('menunggu');
 
-            // 🔹 Status persetujuan
-            $table->enum('status', ['menunggu', 'disetujui', 'ditolak'])->default('menunggu');
-            $table->foreignId('disetujui_oleh')->nullable()->constrained('pegawais')->nullOnDelete();
+            $table->foreignId('disetujui_oleh')
+                ->nullable()
+                ->constrained('pegawais')
+                ->nullOnDelete();
 
-            // 🔹 Audit trail
-            $table->foreignId('created_by')->nullable()->constrained('pegawais')->nullOnDelete();
-            $table->foreignId('updated_by')->nullable()->constrained('pegawais')->nullOnDelete();
+            $table->foreignId('created_by')
+                ->nullable()
+                ->constrained('pegawais')
+                ->nullOnDelete();
+
+            $table->foreignId('updated_by')
+                ->nullable()
+                ->constrained('pegawais')
+                ->nullOnDelete();
 
             $table->timestamps();
         });
     }
 
-    /**
-     * Rollback migration (hapus tabel cutis).
-     */
     public function down(): void
     {
         Schema::dropIfExists('cutis');

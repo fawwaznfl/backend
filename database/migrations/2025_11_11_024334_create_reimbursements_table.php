@@ -12,6 +12,7 @@ return new class extends Migration
             $table->id();
 
             $table->foreignId('company_id')
+                ->nullable()
                 ->constrained('companies')
                 ->onDelete('cascade');
 
@@ -24,26 +25,24 @@ return new class extends Migration
                 ->onDelete('cascade');
 
             $table->date('tanggal');
-            $table->string('event');
+            $table->string('event')->nullable();
 
-            $table->enum('metode', [
-                'cash',
-                'transfer',
-            ])->default('cash');
+            $table->enum('metode_reim', ['cash', 'transfer'])
+                ->default('cash');
 
             $table->string('no_rekening')->nullable();
-            $table->bigInteger('jumlah')->nullable(); 
-            $table->bigInteger('terpakai')->default(0);
-            $table->bigInteger('total'); 
-            $table->bigInteger('sisa')->default(0);
 
-            $table->enum('status', [
-                'pending',
-                'approve',
-                'reject'
-            ])->default('pending');
+            $table->integer('jumlah')->nullable();
+            $table->integer('terpakai')->default(1);
+            $table->decimal('total', 15, 2)->nullable();
+            $table->integer('sisa')->nullable();
+
+            $table->enum('status', ['pending', 'approve', 'reject'])
+                ->default('pending');
 
             $table->string('file')->nullable();
+            $table->string('approved_file')->nullable();
+
             $table->timestamps();
         });
     }

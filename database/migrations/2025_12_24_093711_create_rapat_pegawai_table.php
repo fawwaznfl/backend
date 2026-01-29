@@ -6,25 +6,27 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
         Schema::create('rapat_pegawai', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('rapat_id')->constrained('rapats')->cascadeOnDelete();
-            $table->foreignId('pegawai_id')->constrained('pegawais')->cascadeOnDelete();
+
+            $table->foreignId('rapat_id')
+                ->constrained('rapats')
+                ->cascadeOnDelete();
+
+            $table->foreignId('pegawai_id')
+                ->constrained('pegawais')
+                ->cascadeOnDelete();
+
+            $table->timestamp('waktu_hadir')->nullable();
+
             $table->timestamps();
 
             $table->unique(['rapat_id', 'pegawai_id']);
         });
-
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::dropIfExists('rapat_pegawai');

@@ -10,13 +10,19 @@ class CreateDokumenPegawaisTable extends Migration
     {
         Schema::create('dokumen_pegawais', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('pegawai_id')->constrained('pegawais')->onDelete('cascade');
-            $table->foreignId('company_id')->constrained('companies')->onDelete('cascade');
+
+            $table->foreignId('pegawai_id')
+                ->constrained('pegawais')
+                ->onDelete('cascade');
+
+            $table->foreignId('company_id')
+                ->constrained('companies')
+                ->onDelete('cascade');
 
             $table->string('nama_dokumen');
-            $table->string('file'); // path file upload
+            $table->string('file'); 
             $table->text('keterangan')->nullable();
-            $table->date('tanggal_upload');
+            $table->dateTime('tanggal_upload')->nullable();
 
             $table->timestamps();
         });
@@ -27,4 +33,3 @@ class CreateDokumenPegawaisTable extends Migration
         Schema::dropIfExists('dokumen_pegawais');
     }
 }
-

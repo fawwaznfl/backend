@@ -11,24 +11,38 @@ return new class extends Migration
         Schema::create('kontraks', function (Blueprint $table) {
             $table->id();
 
-            // 🔹 Relasi umum
-            $table->foreignId('company_id')->nullable()->constrained('companies')->onDelete('cascade');
-            $table->foreignId('pegawai_id')->nullable()->constrained('pegawais')->onDelete('cascade');
+            $table->foreignId('company_id')
+                ->nullable()
+                ->constrained('companies')
+                ->onDelete('cascade');
 
-            // 🔹 Info kontrak kerja
+            $table->foreignId('pegawai_id')
+                ->nullable()
+                ->constrained('pegawais')
+                ->onDelete('cascade');
+
             $table->string('nomor_kontrak')->nullable();
-            $table->enum('jenis_kontrak', [
-                'PKWT',   // Perjanjian Kerja Waktu Tertentu
-                'PKWTT',  // Perjanjian Kerja Waktu Tidak Tertentu
-                'THL'     // Tenaga Harian Lepas
-            ])->default('PKWT');
+            $table->enum('jenis_kontrak', ['PKWT', 'PKWTT', 'THL'])
+                ->default('PKWT');
+
             $table->date('tanggal_mulai')->nullable();
             $table->date('tanggal_selesai')->nullable();
-            $table->string('file_kontrak')->nullable(); // dokumen kontrak kerja
+            $table->string('file_kontrak')->nullable();
 
-            // 🔹 Audit
-            $table->foreignId('created_by')->nullable()->constrained('pegawais')->nullOnDelete();
-            $table->foreignId('updated_by')->nullable()->constrained('pegawais')->nullOnDelete();
+            $table->boolean('notified_h30')->default(false);
+            $table->boolean('notified_h7')->default(false);
+
+            $table->text('keterangan')->nullable();
+
+            $table->foreignId('created_by')
+                ->nullable()
+                ->constrained('pegawais')
+                ->nullOnDelete();
+
+            $table->foreignId('updated_by')
+                ->nullable()
+                ->constrained('pegawais')
+                ->nullOnDelete();
 
             $table->timestamps();
         });

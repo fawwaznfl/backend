@@ -5,7 +5,7 @@ namespace App\Models;
 use App\Services\NotificationService;
 use Illuminate\Database\Eloquent\Model;
 
-class Kasbon extends Model
+class kasbon extends Model
 {
     protected $fillable = [
     'company_id',

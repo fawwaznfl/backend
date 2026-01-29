@@ -6,32 +6,60 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    public function up()
+    public function up(): void
     {
         Schema::create('shift_mapping', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('company_id')->nullable();
-            $table->unsignedBigInteger('pegawai_id');
-            $table->unsignedBigInteger('shift_id');
 
-            // Update: tanggal_mulai & tanggal_selesai
+            $table->foreignId('company_id')
+                ->nullable()
+                ->constrained('companies')
+                ->cascadeOnDelete();
+
+            $table->foreignId('pegawai_id')
+                ->constrained('pegawais')
+                ->cascadeOnDelete();
+
+            $table->foreignId('shift_id')
+                ->constrained('shifts')
+                ->cascadeOnDelete();
+
+            $table->foreignId('shift_lama_id')
+                ->nullable()
+                ->constrained('shifts')
+                ->nullOnDelete();
+
+            $table->integer('toleransi_telat')->default(0);
+            $table->string('status_toleransi')->nullable();
+
             $table->date('tanggal_mulai');
             $table->date('tanggal_selesai')->nullable();
 
+            $table->enum('status', ['pending', 'approved', 'rejected'])
+                ->nullable()
+                ->default('pending');
+
+            $table->foreignId('requested_by')
+                ->nullable()
+                ->constrained('pegawais')
+                ->nullOnDelete();
+
+            $table->foreignId('approved_by')
+                ->nullable()
+                ->constrained('pegawais')
+                ->nullOnDelete();
+
+            $table->timestamp('approved_at')->nullable();
+
             $table->timestamps();
-
-            // Foreign keys
-            $table->foreign('company_id')->references('id')->on('companies')->onDelete('cascade');
-            $table->foreign('pegawai_id')->references('id')->on('pegawais')->onDelete('cascade');
-            $table->foreign('shift_id')->references('id')->on('shifts')->onDelete('cascade');
-
-            // Unique (pegawai hanya punya 1 shift range pada tanggal yg sama)
             $table->unique(['pegawai_id', 'tanggal_mulai']);
         });
     }
 
-    public function down()
+    public function down(): void
     {
+        Schema::disableForeignKeyConstraints();
         Schema::dropIfExists('shift_mapping');
+        Schema::enableForeignKeyConstraints();
     }
 };

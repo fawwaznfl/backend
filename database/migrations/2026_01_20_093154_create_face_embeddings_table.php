@@ -9,15 +9,9 @@ return new class extends Migration {
     {
         Schema::create('face_embeddings', function (Blueprint $table) {
             $table->id();
-
             $table->unsignedBigInteger('pegawai_id')->unique();
-
-            // InsightFace embedding (512 float32 → BLOB)
             $table->binary('embedding');
-
             $table->timestamps();
-
-            // Optional FK (kalau tabel pegawais ada)
             $table->foreign('pegawai_id')
                   ->references('id')
                   ->on('pegawais')

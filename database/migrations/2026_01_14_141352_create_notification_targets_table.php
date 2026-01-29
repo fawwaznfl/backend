@@ -6,9 +6,6 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
         Schema::create('notification_targets', function (Blueprint $table) {
@@ -16,7 +13,7 @@ return new class extends Migration
             $table->foreignId('notification_id')->constrained()->cascadeOnDelete();
 
             $table->unsignedBigInteger('user_id')->nullable();
-            $table->string('role')->nullable(); // superadmin | admin | pegawai
+            $table->string('role')->nullable(); 
             $table->unsignedBigInteger('company_id')->nullable();
 
             $table->boolean('is_read')->default(false);
@@ -26,10 +23,7 @@ return new class extends Migration
         });
 
     }
-
-    /**
-     * Reverse the migrations.
-     */
+    
     public function down(): void
     {
         Schema::dropIfExists('notification_targets');

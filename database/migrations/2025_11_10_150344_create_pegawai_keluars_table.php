@@ -11,28 +11,28 @@ return new class extends Migration
         Schema::create('pegawai_keluars', function (Blueprint $table) {
             $table->id();
 
-            // 🔹 Relasi utama
-            $table->foreignId('company_id')->nullable()->constrained('companies')->onDelete('cascade');
-            $table->foreignId('pegawai_id')->nullable()->constrained('pegawais')->onDelete('cascade');
+            $table->unsignedBigInteger('company_id')->nullable();
+            $table->unsignedBigInteger('pegawai_id')->nullable();
 
-            // 🔹 Data pegawai keluar
-            $table->date('tanggal_keluar')->nullable();
+            $table->string('jenis_keberhentian')->nullable();
             $table->string('alasan')->nullable();
-            $table->enum('jenis_keberhentian', [
-            'PHK',
-            'Pengunduran Diri',
-            'Meninggal Dunia',
-            'Pensiun',
-            ])->nullable();
-            
-            $table->string('upload_file')->nullable(); // 🔁 ganti dari keterangan jadi upload_file
+            $table->date('tanggal_keluar')->nullable();
+            $table->string('upload_file')->nullable();
 
-            // 🔹 Audit
-            $table->foreignId('disetujui_oleh')->nullable()->constrained('pegawais')->nullOnDelete();
-            $table->foreignId('created_by')->nullable()->constrained('pegawais')->nullOnDelete();
-            $table->foreignId('updated_by')->nullable()->constrained('pegawais')->nullOnDelete();
+            $table->string('status')->default('pending');
+            $table->text('note_approver')->nullable();
+
+            $table->unsignedBigInteger('disetujui_oleh')->nullable();
+            $table->unsignedBigInteger('created_by')->nullable();
+            $table->unsignedBigInteger('updated_by')->nullable();
 
             $table->timestamps();
+
+            $table->index('company_id');
+            $table->index('pegawai_id');
+            $table->index('disetujui_oleh');
+            $table->index('created_by');
+            $table->index('updated_by');
         });
     }
 

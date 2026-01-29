@@ -11,37 +11,55 @@ return new class extends Migration
         Schema::create('absensis', function (Blueprint $table) {
             $table->id();
 
-            // === Relasi utama
-            $table->foreignId('pegawai_id')->constrained('pegawais')->onDelete('cascade');
-            $table->foreignId('company_id')->nullable()->constrained('companies')->onDelete('cascade');
-            $table->foreignId('lokasi_id')->nullable()->constrained('lokasis')->nullOnDelete();
-            $table->foreignId('shift_id')->nullable()->constrained('shifts')->nullOnDelete();
+            // === RELASI UTAMA
+            $table->foreignId('pegawai_id')
+                ->constrained('pegawais')
+                ->cascadeOnDelete();
 
-            // === Data absensi otomatis oleh sistem
+            $table->foreignId('company_id')
+                ->nullable()
+                ->constrained('companies')
+                ->cascadeOnDelete();
+
+            $table->foreignId('lokasi_id')
+                ->nullable()
+                ->constrained('lokasis')
+                ->nullOnDelete();
+
+            $table->foreignId('shift_id')
+                ->nullable()
+                ->constrained('shifts')
+                ->nullOnDelete();
+
+            // === DATA WAKTU ABSENSI
             $table->date('tanggal');
             $table->time('jam_masuk')->nullable();
             $table->time('jam_pulang')->nullable();
 
-            // === Data foto absensi
-            $table->string('foto_masuk')->nullable();   // FOTO MASUK
-            $table->string('foto_pulang')->nullable();  // FOTO PULANG (tambahan)
-
-            // === Data lokasi absensi
-            $table->string('lokasi_masuk')->nullable();   // LOKASI MASUK
-            $table->string('lokasi_pulang')->nullable();  // LOKASI PULANG
-
-            // === Perhitungan telat / pulang cepat
+            // === KETERLAMBATAN
             $table->integer('telat')->nullable();          // menit
             $table->integer('pulang_cepat')->nullable();   // menit
 
-            // === Keterangan opsional (gabungan)
+            // === LOKASI ABSENSI
+            $table->string('lokasi_masuk')->nullable();
+            $table->string('lokasi_pulang')->nullable();
+
+            // === FOTO ABSENSI
+            $table->string('foto_masuk')->nullable();
+            $table->string('foto_pulang')->nullable();
+
+            // === KETERANGAN TERPISAH
+            $table->text('keterangan_masuk')->nullable();
+            $table->text('keterangan_pulang')->nullable();
+
+            // === KETERANGAN UMUM
             $table->text('keterangan')->nullable();
 
-            // === Koordinat otomatis
+            // === KOORDINAT GPS
             $table->decimal('latitude', 10, 7)->nullable();
             $table->decimal('longitude', 10, 7)->nullable();
 
-            // === Status absensi
+            // === STATUS ABSENSI
             $table->enum('status', [
                 'hadir',
                 'sakit',
@@ -50,11 +68,23 @@ return new class extends Migration
                 'dinas_luar',
                 'libur',
                 'alpha',
-            ])->default('hadir');
+            ])->default('alpha');
 
-            // === Verifikasi oleh admin
-            $table->enum('verifikasi', ['pending', 'disetujui', 'ditolak'])->default('pending');
-            $table->foreignId('approved_by')->nullable()->constrained('pegawais')->nullOnDelete();
+            // === VERIFIKASI ADMIN
+            $table->enum('verifikasi', [
+                'pending',
+                'disetujui',
+                'ditolak',
+            ])->default('pending');
+
+            $table->foreignId('approved_by')
+                ->nullable()
+                ->constrained('pegawais')
+                ->nullOnDelete();
+
+            // === FACE RECOGNITION
+            $table->decimal('face_score', 5, 4)->nullable();
+            $table->boolean('face_verified')->default(false);
 
             $table->timestamps();
         });
