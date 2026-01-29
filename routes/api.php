@@ -79,12 +79,11 @@ Route::prefix('v1')->group(function () {
         
         Route::get('kategori-reimbursement', [KategoriReimbursementController::class, 'index']);   
         Route::get('kategori-reimbursement/{id}', [KategoriReimbursementController::class, 'show']);
-        Route::apiResource('shifts', ShiftController::class); // udah sesuai dengan kebutuhan
+        Route::apiResource('shifts', ShiftController::class); 
 
         // Data pribadi & absensi
         Route::get('my-profile', [PegawaiController::class, 'myProfile']);
         Route::get('/my-profile', [AuthPegawaiController::class, 'myProfile']);
-
 
         // absensi
         Route::get('/absensi/self', [AbsensiController::class, 'self']);
@@ -134,22 +133,22 @@ Route::prefix('v1')->group(function () {
         Route::get('laporan-kerja/me', [LaporanKerjaController::class, 'myLaporan']);
 
         //Kunjungan
-        Route::apiResource('kunjungan', KunjunganController::class); // udah sesuai dengan kebutuhan
+        Route::apiResource('kunjungan', KunjunganController::class); 
 
         //rapat
-        Route::apiResource('rapat', RapatController::class); // udah sesuai dengan kebutuhan
+        Route::apiResource('rapat', RapatController::class); 
         Route::post('/rapat/{id}/hadir', [RapatController::class, 'hadir']);
         Route::post('rapat/{id}/notulen', [RapatController::class, 'simpanNotulen']);
 
         //Dokumen
-        Route::apiResource('dokumen-pegawai', DokumenPegawaiController::class); // udah sesuai dengan kebutuhan
+        Route::apiResource('dokumen-pegawai', DokumenPegawaiController::class); 
         Route::get('/dokumen-pegawai/by-pegawai/{pegawai}', [DokumenPegawaiController::class, 'byPegawai']);
 
         //Penugasan
-        Route::apiResource('penugasan', PenugasanController::class); // udah sesuai dengan kebutuhan
+        Route::apiResource('penugasan', PenugasanController::class); 
 
         //Berita
-        Route::apiResource('berita', BeritaController::class); // sudah sesuai dengan kebutuhan
+        Route::apiResource('berita', BeritaController::class); 
 
         //Profile
         Route::post('/profile/update-foto', [ProfileController::class, 'updateFoto']);
@@ -158,10 +157,8 @@ Route::prefix('v1')->group(function () {
         //hitung cuti
         Route::get('/cuti/summary/{pegawai_id}', [CutiController::class, 'summary']);
 
-
-
         //Inventory
-        Route::apiResource('inventory', InventoryController::class); // sudah sesuai dengan kebutuhan
+        Route::apiResource('inventory', InventoryController::class); 
         Route::get('/pegawai/divisi', [DivisiController::class, 'divisiPegawai']);
 
         Route::get('/dinas-luar/self', [DinasLuarController::class, 'self']);
@@ -169,20 +166,16 @@ Route::prefix('v1')->group(function () {
         Route::post('/dinas-luar/pulang', [DinasLuarController::class, 'absenPulang']);
         Route::get('/dinas-luar/check/{pegawai_id}', [DinasLuarController::class, 'checkToday']);
         Route::get('dinas-luar/status-pegawai/{id}', [DinasLuarController::class, 'statusPegawai']);
-        //Route::apiResource('dinas-luar', DinasLuarController::class);
         Route::post('dinas-luar/auto', [DinasLuarController::class, 'autoAbsen']);
         Route::get('/dinas-luar/by-pegawai/{pegawai}', [DinasLuarController::class, 'byPegawai']);
 
-
-        //Route::apiResource('absensi', AbsensiController::class)->only(['index', 'store', 'show']);
-        Route::apiResource('cuti', CutiController::class); // sudah sesuai degan kebutuhan
+        Route::apiResource('cuti', CutiController::class); 
         Route::get('/cuti/check-today/{pegawai_id}', [CutiController::class, 'checkToday']);
-        Route::apiResource('lembur', LemburController::class)->only(['index', 'store', 'show']); // sudah sesuai degan kebutuhan
+        Route::apiResource('lembur', LemburController::class)->only(['index', 'store', 'show']); 
         
         // Notifikasi dan info umum
-        Route::apiResource('notifikasi', NotifikasiController::class)->only(['index', 'show']); // sudah sesuai degan kebutuhan
-        Route::apiResource('berita', BeritaController::class)->only(['index', 'show']); // sudah sesuai degan kebutuhan
-        //Route::apiResource('reimbursement', ReimbursementController::class);
+        Route::apiResource('notifikasi', NotifikasiController::class)->only(['index', 'show']); 
+        Route::apiResource('berita', BeritaController::class)->only(['index', 'show']); 
 
         // Kategori Reimbursement 
         Route::apiResource('kategori-reimbursement', KategoriReimbursementController::class);
@@ -200,39 +193,33 @@ Route::prefix('v1')->group(function () {
     // ========================
     Route::middleware(['auth:sanctum', 'role.dashboard:superadmin', 'company.scope'])->group(function () {
 
-        // Core ✅
-        Route::apiResource('companies', CompanyController::class); // udah sesuai dengan kebutuhan
-        Route::apiResource('roles', RoleController::class); // udah sesuai dengan kebutuhan
-        Route::apiResource('divisis', DivisiController::class); // udah sesuai dengan kebutuhan
+        // Core 
+        Route::apiResource('companies', CompanyController::class); 
+        Route::apiResource('roles', RoleController::class); 
+        Route::apiResource('divisis', DivisiController::class); 
         Route::apiResource('pegawais', PegawaiController::class); 
-        Route::apiResource('lokasis', LokasiController::class); // udah sesuai dengan kebutuhan 
-        //Route::apiResource('shifts', ShiftController::class); // udah sesuai dengan kebutuhan
+        Route::apiResource('lokasis', LokasiController::class); 
 
-        // HR ✅
-        Route::apiResource('kontrak', KontrakController::class); //udah sesuai dengan kebutuhan
-        Route::apiResource('pegawai-keluar', PegawaiKeluarController::class); //udah sesuai dengan kebutuhan
-        //Route::apiResource('dokumen-pegawai', DokumenPegawaiController::class); // udah sesuai dengan kebutuhan
+        // HR 
+        Route::apiResource('kontrak', KontrakController::class); 
+        Route::apiResource('pegawai-keluar', PegawaiKeluarController::class); 
         Route::post('pegawai-keluar/{id}/approve', [PegawaiKeluarController::class, 'approve']);
         Route::post('pegawai-keluar/{id}/reject', [PegawaiKeluarController::class, 'reject']);
         Route::put('/pegawai-keluar/{id}/approve', [PegawaiKeluarController::class, 'approve']);
 
         // Attendance
         Route::apiResource('absensi', AbsensiController::class); 
-        //Route::apiResource('cuti', CutiController::class); // sudah sesuai degan kebutuhan
         Route::put('/cuti/{id}/approve', [CutiController::class, 'approve']);
         Route::put('cuti/{id}/reject', [CutiController::class, 'reject']);
-        Route::apiResource('dinas-luar', DinasLuarController::class); //sudah
-        Route::apiResource('lembur', LemburController::class); // udah sesuai dengan kebutuhan
-        Route::apiResource('patroli', PatroliController::class); // udah sesuai dengan kebutuhan
-        //Route::apiResource('kunjungan', KunjunganController::class); // udah sesuai dengan kebutuhan
-        //Route::apiResource('penugasan', PenugasanController::class); // udah sesuai dengan kebutuhan
-        //Route::apiResource('rapat', RapatController::class); // udah sesuai dengan kebutuhan
+        Route::apiResource('dinas-luar', DinasLuarController::class); 
+        Route::apiResource('lembur', LemburController::class); 
+        Route::apiResource('patroli', PatroliController::class); 
         Route::get('shift-mapping/requests', [ShiftMappingController::class, 'requests']);
         Route::get('shift-mapping/pegawai/{id}', [ShiftMappingController::class, 'byPegawai']);
         Route::post('shift-mapping/{id}/approve', [ShiftMappingController::class, 'approve']);
         Route::post('shift-mapping/{id}/reject', [ShiftMappingController::class, 'reject']);
 
-        // ✅ TERAKHIR BARU apiResource
+        // API RESOURCE
         Route::apiResource('shift-mapping', ShiftMappingController::class);
         Route::delete('/absensi/{id}', [AbsensiController::class, 'destroy']);
 
@@ -249,8 +236,6 @@ Route::prefix('v1')->group(function () {
         Route::get('/rekap-absensi/pegawai/{pegawaiId}',[RekapAbsensiController::class, 'rekapPegawai']);
 
         //Notifikasi
-        //Route::get('/notifications', [NotificationController::class, 'index']);
-        //Route::post('/notifications/{id}/read', [NotificationController::class, 'read']);
         Route::get('/notifications/unread-count', [NotificationController::class, 'unreadCount']);
 
         // Profile
@@ -258,9 +243,9 @@ Route::prefix('v1')->group(function () {
         Route::post('/user/profile', [PegawaiController::class, 'updateProfile']);
 
 
-        // Performance ✅
-        Route::apiResource('jenis-kinerja', JenisKinerjaController::class); // sudah sesuai dengan kebutuhan
-        Route::apiResource('target-kinerja', TargetKinerjaController::class); // nanti dulu deh 
+        // Performance 
+        Route::apiResource('jenis-kinerja', JenisKinerjaController::class); 
+        Route::apiResource('target-kinerja', TargetKinerjaController::class); 
 
         //Face Recognition
         //Route::post('/face/register', [FaceController::class, 'register']);
@@ -273,17 +258,9 @@ Route::prefix('v1')->group(function () {
         Route::get('/calendar/izin', [SakitCalendarController::class, 'izin']);
         Route::get('/calendar/telat', [SakitCalendarController::class, 'telat']);
         Route::get('/calendar/pulang', [SakitCalendarController::class, 'pulang']);
-
-
-
-
-        // Inventory & Info ✅
-        //Route::apiResource('inventory', InventoryController::class); // sudah sesuai dengan kebutuhan
-        Route::apiResource('notifikasi', NotifikasiController::class); // // sudah sesuai degan kebutuhan
-        //Route::apiResource('berita', BeritaController::class); // sudah sesuai dengan kebutuhan
+        Route::apiResource('notifikasi', NotifikasiController::class); 
 
         // Keuangan 
-        //Route::apiResource('kasbon', KasbonController::class); // ✅ baru ditambah
         Route::patch('/kasbon/{id}/approve', [KasbonController::class, 'approve']);
         Route::patch('/kasbon/{id}/reject', [KasbonController::class, 'reject']);
         Route::post('/kasbon/{id}/approval', [KasbonController::class, 'approval']);
@@ -294,8 +271,6 @@ Route::prefix('v1')->group(function () {
         Route::apiResource('payrolls', PayrollController::class);
         Route::put('reimbursement/{id}/reject', [ReimbursementController::class, 'reject']);
         Route::post('reimbursement/{id}/approve', [ReimbursementController::class, 'approve']);
-
-        //Route::apiResource('kategori-reimbursement', KategoriReimbursementController::class);
     });
 
     // ========================
@@ -303,38 +278,27 @@ Route::prefix('v1')->group(function () {
     // ========================
     Route::middleware(['auth:sanctum', 'role.dashboard:admin', 'company.scope'])->group(function () {
 
-        Route::apiResource('roles', RoleController::class); // udah sesuai dengan kebutuhan
-        Route::apiResource('divisis', DivisiController::class); // udah sesuai dengan kebutuhan
+        Route::apiResource('roles', RoleController::class); 
+        Route::apiResource('divisis', DivisiController::class); 
         Route::apiResource('pegawais', PegawaiController::class); 
-        Route::apiResource('lokasis', LokasiController::class); // udah sesuai dengan kebutuhan 
-        //Route::apiResource('shifts', ShiftController::class); // udah sesuai dengan kebutuhan
+        Route::apiResource('lokasis', LokasiController::class); 
         Route::delete('/absensi/{id}', [AbsensiController::class, 'destroy']);
 
 
-        // HR ✅
-        Route::apiResource('kontrak', KontrakController::class); //udah sesuai dengan kebutuhan
-        Route::apiResource('pegawai-keluar', PegawaiKeluarController::class); //udah sesuai dengan kebutuhan
+        // HR 
+        Route::apiResource('kontrak', KontrakController::class); 
+        Route::apiResource('pegawai-keluar', PegawaiKeluarController::class); 
         Route::post('pegawai-keluar/{id}/approve', [PegawaiKeluarController::class, 'approve']);
         Route::post('pegawai-keluar/{id}/reject', [PegawaiKeluarController::class, 'reject']);
         Route::put('/pegawai-keluar/{id}/approve', [PegawaiKeluarController::class, 'approve']);
-        //Route::apiResource('dokumen-pegawai', DokumenPegawaiController::class); // udah sesuai dengan kebutuhan
 
         // Attendance
         Route::apiResource('absensi', AbsensiController::class); 
-        //Route::apiResource('cuti', CutiController::class); // sudah sesuai degan kebutuhan
-        Route::apiResource('dinas-luar', DinasLuarController::class); //sudah
+        Route::apiResource('dinas-luar', DinasLuarController::class);
         Route::put('/cuti/{id}/approve', [CutiController::class, 'approve']);
         Route::put('cuti/{id}/reject', [CutiController::class, 'reject']);
-        Route::apiResource('lembur', LemburController::class); // udah sesuai dengan kebutuhan
-        Route::apiResource('patroli', PatroliController::class); // udah sesuai dengan kebutuhan
-        //Route::apiResource('kunjungan', KunjunganController::class); // udah sesuai dengan kebutuhan
-        //Route::apiResource('penugasan', PenugasanController::class); // udah sesuai dengan kebutuhan
-        //Route::apiResource('rapat', RapatController::class); // udah sesuai dengan kebutuhan
-        //Route::apiResource('shift-mapping', ShiftMappingController::class);
-        //Route::get('shift-mapping/pegawai/{id}', [ShiftMappingController::class, 'byPegawai']);
-        //Route::post('shift-mapping/{id}/approve', [ShiftMappingController::class, 'approve']);
-        //Route::get('shift-mapping/requests', [ShiftMappingController::class, 'requests']);
-        //Route::put('shift-mapping/{id}', [ShiftMappingController::class, 'update']);
+        Route::apiResource('lembur', LemburController::class); 
+        Route::apiResource('patroli', PatroliController::class); 
 
         Route::get('shift-mapping/requests', [ShiftMappingController::class, 'requests']);
         Route::get('shift-mapping/pegawai/{id}', [ShiftMappingController::class, 'byPegawai']);
@@ -352,11 +316,8 @@ Route::prefix('v1')->group(function () {
         Route::get('/payrolls/{id}/download', [PayrollController::class, 'download']);
         Route::get('/rekap-absensi/pegawai/{pegawaiId}', [RekapAbsensiController::class, 'rekapPegawai']);
 
-        // ✅ TERAKHIR BARU apiResource
+        // API RESOURCE
         Route::apiResource('shift-mapping', ShiftMappingController::class);
-        //Route::get('shift-mapping/pegawai/{id}', [ShiftMappingController::class, 'byPegawai']);
-        
-
         Route::post('lembur/{id}/approve', [LemburController::class, 'approve']);
         Route::post('lembur/{id}/reject', [LemburController::class, 'reject']);
         Route::get('/rekap-absensi/summary', [RekapAbsensiSummaryController::class, 'index']);
@@ -365,21 +326,12 @@ Route::prefix('v1')->group(function () {
         Route::put('dinas-luar-mapping/{id}', [DinasLuarMappingController::class, 'update']);
         Route::get('dinas-luar-mapping/pegawai/{id}', [DinasLuarMappingController::class, 'byPegawai']);
 
-        // Performance ✅
-        Route::apiResource('jenis-kinerja', JenisKinerjaController::class); // sudah sesuai dengan kebutuhan
-        Route::apiResource('target-kinerja', TargetKinerjaController::class); // nanti dulu deh 
+        // Performance 
+        Route::apiResource('jenis-kinerja', JenisKinerjaController::class); 
+        Route::apiResource('target-kinerja', TargetKinerjaController::class); 
 
-        // Inventory & Info ✅
-        //Route::apiResource('inventory', InventoryController::class); // sudah sesuai dengan kebutuhan
-        Route::apiResource('notifikasi', NotifikasiController::class); // // sudah sesuai degan kebutuhan
-        //Route::apiResource('berita', BeritaController::class); // sudah sesuai dengan kebutuhan
-
-        //Keuangan
-        //Route::apiResource('kasbon', KasbonController::class); // ✅ baru ditambah
-
-        //Notifikasi
-        //Route::get('/notifications', [NotificationController::class, 'index']);
-        //Route::post('/notifications/{id}/read', [NotificationController::class, 'read']);
+        // Inventory & Info 
+        Route::apiResource('notifikasi', NotifikasiController::class); 
         Route::get('/notifications/unread-count', [NotificationController::class, 'unreadCount']);
         
 
@@ -392,12 +344,9 @@ Route::prefix('v1')->group(function () {
         Route::get('/calendar/telat', [SakitCalendarController::class, 'telat']);
         Route::get('/calendar/pulang', [SakitCalendarController::class, 'pulang']);
 
-        
         Route::patch('/kasbon/{id}/approve', [KasbonController::class, 'approve']);
         Route::patch('/kasbon/{id}/reject', [KasbonController::class, 'reject']);
-        Route::post('/kasbon/{id}/approval', [KasbonController::class, 'approval']);
-
-        
+        Route::post('/kasbon/{id}/approval', [KasbonController::class, 'approval']);        
         Route::apiResource('rekap-pengajuan-keuangan', RekapPengajuanKeuanganController::class);
         Route::apiResource('tarif-pph', TarifPphController::class);
         Route::apiResource('rekap-pajak-pegawai', RekapPajakPegawaiController::class);
@@ -406,8 +355,5 @@ Route::prefix('v1')->group(function () {
         Route::post('reimbursement/{id}/approve', [ReimbursementController::class, 'approve']);
         Route::post('shift-mapping/approve/{id}', [ShiftMappingController::class, 'approve']);
         Route::post('shift-mapping/reject/{id}', [ShiftMappingController::class, 'reject']);
-
-        //Route::apiResource('kategori-reimbursement', KategoriReimbursementController::class);
-
     });
 });
