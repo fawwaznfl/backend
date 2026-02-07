@@ -123,4 +123,11 @@ class CompanyController extends Controller
             return ApiFormatter::error('Failed to delete company', 500, $e->getMessage());
         }
     }
+
+    public function publicList()
+    {
+        $companies = Company::select('id', 'name')->orderBy('name')->get();
+        return ApiFormatter::success($companies, 'Public company list');
+    }
+
 }

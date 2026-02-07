@@ -26,10 +26,11 @@ class AuthPegawaiController extends Controller
             'username' => $request->username,
             'email' => $request->email,
             'telepon' => $request->no_telp,
+            'company_id' => $request->company_id,
             'password' => Hash::make($request->password),
             'tgl_join' => now(),
         ]);
-
+        
         $token = $pegawai->createToken('auth_token')->plainTextToken;
 
         return response()->json([

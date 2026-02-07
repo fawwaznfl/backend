@@ -20,15 +20,10 @@ class ShiftMappingController extends Controller
         $pegawai_id = $request->pegawai_id;
         $today = Carbon::today()->toDateString();
 
-        // ==========================
-        // PEGAWAI
-        // ==========================
         if ($user->dashboard_type === 'pegawai') {
 
             $query = ShiftMapping::with('shift:id,nama,jam_masuk,jam_pulang')
                 ->where('pegawai_id', $user->id);
-
-            //$this->shiftMasihAktifQuery($query, $today); // ini untuk tidak menampilkan yang sudah berlalu
 
             $data = $query
                 ->orderBy('tanggal_mulai', 'asc')
@@ -37,9 +32,6 @@ class ShiftMappingController extends Controller
             return ApiFormatter::success($data);
         }
 
-        // ==========================
-        // ADMIN & SUPERADMIN
-        // ==========================
         $query = ShiftMapping::with('shift:id,nama,jam_masuk,jam_pulang');
 
         if ($pegawai_id) {
@@ -60,7 +52,7 @@ class ShiftMappingController extends Controller
     }
 
 
-    // STORE — Buat shift mapping per hari
+    // STORE Buat shift mapping per hari
     public function store(Request $request)
     {
         $user = auth()->user();
@@ -72,9 +64,8 @@ class ShiftMappingController extends Controller
             'tanggal_selesai' => 'required|date|after_or_equal:tanggal_mulai',
         ]);
 
-        // 🔥 AMBIL COMPANY DARI PEGAWAI
+        // AMBIL COMPANY DARI PEGAWAI
         $pegawai = Pegawai::findOrFail($request->pegawai_id);
-
         $companyId = $pegawai->company_id;
 
         $start = Carbon::parse($request->tanggal_mulai);
@@ -95,7 +86,7 @@ class ShiftMappingController extends Controller
                 );
             }
 
-            $inserted[] = ShiftMapping::create([
+            $mapping = ShiftMapping::create([
                 'pegawai_id'    => $pegawai->id,
                 'company_id'    => $companyId, 
                 'shift_id'      => $request->shift_id,
@@ -108,6 +99,11 @@ class ShiftMappingController extends Controller
                 'approved_by'     => null,
                 'approved_at'     => null,
             ]);
+
+            // Load relasi shift setelah create
+            $mapping->load('shift:id,nama,jam_masuk,jam_pulang');
+            
+            $inserted[] = $mapping;
 
             $start->addDay();
         }
@@ -162,7 +158,7 @@ class ShiftMappingController extends Controller
             return ApiFormatter::success($mapping, 'Success');
         }
 
-        // Jika bukan admin/superadmin -> hanya boleh lihat data milik dirinya sendiri
+        // Jika bukan admin/superadmin hanya boleh lihat data milik dirinya sendiri
         if ($mapping->pegawai_id != $user->id) {
             return ApiFormatter::error('Unauthorized', 403);
         }
@@ -182,6 +178,7 @@ class ShiftMappingController extends Controller
             }
         }
 
+        // Pastikan relasi 'shift' di-load
         $query = ShiftMapping::with('shift:id,nama,jam_masuk,jam_pulang')
             ->where('pegawai_id', $pegawai_id);
 
@@ -191,6 +188,10 @@ class ShiftMappingController extends Controller
             ->orderBy('tanggal_mulai', 'asc')
             ->get();
 
+        // Filter data yang shift-nya null
+        $data = $data->filter(function($item) {
+            return $item->shift !== null;
+        })->values();
 
         if ($data->isEmpty()) {
             return ApiFormatter::error('Data not found', 404);
@@ -211,6 +212,7 @@ class ShiftMappingController extends Controller
             ], 403);
         }
 
+        // Pastikan relasi 'shift' di-load
         $query = ShiftMapping::with('shift:id,nama,jam_masuk,jam_pulang')
             ->where('pegawai_id', $pegawai_id); 
 
@@ -219,6 +221,11 @@ class ShiftMappingController extends Controller
         $data = $query
             ->orderBy('tanggal_mulai', 'asc')
             ->get();
+
+        // Filter data yang shift-nya null (jika ada data corrupt)
+        $data = $data->filter(function($item) {
+            return $item->shift !== null;
+        })->values();
 
         return ApiFormatter::success($data, 'Success');
     }
@@ -251,7 +258,7 @@ class ShiftMappingController extends Controller
 
     public function requests(Request $request)
     {
-        $user = auth()->user(); // ✅ FIX INI
+        $user = auth()->user();
 
         \Log::info('HIT requests()', [
             'user' => $user,
@@ -414,17 +421,17 @@ class ShiftMappingController extends Controller
         $shift->approved_at = null;
         $shift->save();
 
-        // ✅ FIX: Ubah type menjadi request_shift_submitted (konsisten dengan frontend)
+        // Ubah type menjadi request_shift_submitted (konsisten dengan frontend)
         NotificationService::create(
             [
-                'type' => 'request_shift_submitted', // ✅ CHANGED
+                'type' => 'request_shift_submitted',
                 'title' => 'Pengajuan Request Shift',
                 'message' => "Pegawai {$user->name} mengajukan request shift",
                 'company_id' => $shift->company_id,
                 'data' => [
                     'shift_mapping_id' => $shift->id,
                     'pegawai_id' => $user->id,
-                    'pegawai_nama' => $user->name, // ✅ ADDED
+                    'pegawai_nama' => $user->name, 
                 ]
             ],
             [
@@ -525,6 +532,70 @@ class ShiftMappingController extends Controller
         ]);
     }
 
+    public function requestNew(Request $request)
+    {
+        $user = auth()->user();
 
+        // Validasi
+        $validated = $request->validate([
+            'shift_id' => 'required|exists:shifts,id',
+            'tanggal_mulai' => 'required|date',
+            'tanggal_selesai' => 'nullable|date|after_or_equal:tanggal_mulai',
+        ]);
+
+        // Cek apakah sudah ada shift di tanggal tersebut
+        $exists = ShiftMapping::where('pegawai_id', $user->id)
+            ->where('tanggal_mulai', $validated['tanggal_mulai'])
+            ->first();
+
+        if ($exists) {
+            return ApiFormatter::error('Shift untuk tanggal ini sudah ada', 422);
+        }
+
+        // Ambil company_id dari pegawai
+        $pegawai = Pegawai::findOrFail($user->id);
+
+        // Buat shift mapping baru dengan status pending
+        $mapping = ShiftMapping::create([
+            'pegawai_id' => $user->id,
+            'company_id' => $pegawai->company_id,
+            'shift_id' => $validated['shift_id'],
+            'tanggal_mulai' => $validated['tanggal_mulai'],
+            'tanggal_selesai' => $validated['tanggal_selesai'] ?? $validated['tanggal_mulai'],
+            'toleransi_telat' => 0,
+            'status' => 'pending',
+            'requested_by' => $user->id,
+            'shift_lama_id' => null, // karena belum ada shift sebelumnya
+            'approved_by' => null,
+            'approved_at' => null,
+        ]);
+
+        // Kirim notifikasi ke admin
+        NotificationService::create(
+            [
+                'type' => 'request_shift_submitted',
+                'title' => 'Pengajuan Request Shift Baru',
+                'message' => "Pegawai {$user->name} mengajukan request shift untuk tanggal {$mapping->tanggal_mulai}",
+                'company_id' => $mapping->company_id,
+                'data' => [
+                    'shift_mapping_id' => $mapping->id,
+                    'pegawai_id' => $user->id,
+                    'pegawai_nama' => $user->name,
+                    'tanggal' => $mapping->tanggal_mulai,
+                ]
+            ],
+            [
+                [
+                    'role' => 'admin',
+                    'company_id' => $mapping->company_id,
+                ],
+                [
+                    'role' => 'superadmin',
+                ],
+            ]
+        );
+
+        return ApiFormatter::success($mapping, 'Request shift baru berhasil dibuat');
+    }
 
 }

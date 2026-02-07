@@ -435,6 +435,47 @@ namespace App\Models{
 /**
  * @property int $id
  * @property int|null $company_id
+ * @property int $pegawai_id
+ * @property string $tanggal
+ * @property string $nominal
+ * @property string|null $keperluan
+ * @property string $metode_pengiriman
+ * @property string|null $nomor_rekening
+ * @property string $status
+ * @property string|null $file_approve
+ * @property int|null $created_by
+ * @property int|null $updated_by
+ * @property int|null $disetujui_oleh
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \App\Models\Company|null $company
+ * @property-read \App\Models\Pegawai $pegawai
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Kasbon newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Kasbon newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Kasbon query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Kasbon whereCompanyId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Kasbon whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Kasbon whereCreatedBy($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Kasbon whereDisetujuiOleh($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Kasbon whereFileApprove($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Kasbon whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Kasbon whereKeperluan($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Kasbon whereMetodePengiriman($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Kasbon whereNominal($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Kasbon whereNomorRekening($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Kasbon wherePegawaiId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Kasbon whereStatus($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Kasbon whereTanggal($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Kasbon whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Kasbon whereUpdatedBy($value)
+ */
+	class Kasbon extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
+ * @property int $id
+ * @property int|null $company_id
  * @property string $nama
  * @property string|null $jumlah
  * @property \Illuminate\Support\Carbon|null $created_at
@@ -1437,46 +1478,5 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder<static>|User query()
  */
 	class User extends \Eloquent {}
-}
-
-namespace App\Models{
-/**
- * @property int $id
- * @property int|null $company_id
- * @property int $pegawai_id
- * @property string $tanggal
- * @property string $nominal
- * @property string|null $keperluan
- * @property string $metode_pengiriman
- * @property string|null $nomor_rekening
- * @property string $status
- * @property string|null $file_approve
- * @property int|null $created_by
- * @property int|null $updated_by
- * @property int|null $disetujui_oleh
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
- * @property-read \App\Models\Company|null $company
- * @property-read \App\Models\Pegawai $pegawai
- * @method static \Illuminate\Database\Eloquent\Builder<static>|kasbon newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder<static>|kasbon newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder<static>|kasbon query()
- * @method static \Illuminate\Database\Eloquent\Builder<static>|kasbon whereCompanyId($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|kasbon whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|kasbon whereCreatedBy($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|kasbon whereDisetujuiOleh($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|kasbon whereFileApprove($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|kasbon whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|kasbon whereKeperluan($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|kasbon whereMetodePengiriman($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|kasbon whereNominal($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|kasbon whereNomorRekening($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|kasbon wherePegawaiId($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|kasbon whereStatus($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|kasbon whereTanggal($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|kasbon whereUpdatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|kasbon whereUpdatedBy($value)
- */
-	class kasbon extends \Eloquent {}
 }
 

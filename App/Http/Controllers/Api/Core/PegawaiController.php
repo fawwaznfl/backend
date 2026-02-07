@@ -86,7 +86,7 @@ class PegawaiController extends Controller
 
             'gender' => 'nullable|in:Laki-laki,Perempuan',
         
-            'status_nikah' => 'nullable|in:TK/0,TK/1,TK/2,TK/3,K0,K1,K2,K3',
+            'status_nikah' => 'nullable|in:menikah,belum_menikah,janda,duda',
             'status_pajak' => 'nullable|in:TK/0,TK/1,TK/2,TK/3,K0,K1,K2,K3',
 
             'ktp' => 'nullable|string|max:50',
@@ -125,6 +125,8 @@ class PegawaiController extends Controller
             'tunjangan_bpjs_ketenagakerjaan' => 'nullable|numeric',
             'potongan_bpjs_ketenagakerjaan' => 'nullable|numeric',
             'tunjangan_pajak' => 'nullable|numeric',
+            'kasbon_periode' => 'nullable|in:bulan,tahun',
+            'terlambat_satuan' => 'required|in:hari,jam,menit',
 
             'izin_cuti' => 'nullable|integer',
             'izin_telat' => 'nullable|integer',

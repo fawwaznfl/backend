@@ -89,6 +89,11 @@ return new class extends Migration
             // STATUS 
             $table->enum('status', ['active', 'inactive'])->default('active');
             $table->enum('dashboard_type', ['superadmin', 'admin', 'pegawai'])->default('pegawai');
+            $table->enum('kasbon_periode', ['bulan', 'tahun'])->default('bulan');
+            $table->enum('terlambat_satuan', ['hari', 'jam', 'menit'])
+              ->default('hari')
+              ->after('terlambat');
+
 
             $table->timestamps();
 

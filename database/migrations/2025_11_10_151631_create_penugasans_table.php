@@ -8,38 +8,33 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::table('penugasans', function (Blueprint $table) {
+        Schema::create('penugasans', function (Blueprint $table) {
+            $table->id();
 
-            // 🔹 Kolom penugasan
-            if (!Schema::hasColumn('penugasans', 'judul_pekerjaan')) {
-                $table->string('judul_pekerjaan')->after('pegawai_id');
-            }
+            $table->string('nomor_penugasan')->nullable();
+            $table->unsignedBigInteger('company_id')->nullable();
+            $table->unsignedBigInteger('pegawai_id')->nullable();
 
-            if (!Schema::hasColumn('penugasans', 'rincian_pekerjaan')) {
-                $table->text('rincian_pekerjaan')->nullable()->after('judul_pekerjaan');
-            }
+            $table->string('judul_pekerjaan');
+            $table->text('rincian_pekerjaan')->nullable();
 
-            if (!Schema::hasColumn('penugasans', 'nomor_penugasan')) {
-                $table->string('nomor_penugasan')->nullable()->after('id');
-            }
+            $table->enum('status', ['process', 'pending', 'finish'])
+                  ->default('process');
 
+            $table->unsignedBigInteger('created_by')->nullable();
+            $table->unsignedBigInteger('updated_by')->nullable();
+
+            $table->timestamps();
+
+            $table->index('company_id');
+            $table->index('pegawai_id');
+            $table->index('created_by');
+            $table->index('updated_by');
         });
     }
 
     public function down(): void
     {
-        Schema::table('penugasans', function (Blueprint $table) {
-            if (Schema::hasColumn('penugasans', 'judul_pekerjaan')) {
-                $table->dropColumn('judul_pekerjaan');
-            }
-
-            if (Schema::hasColumn('penugasans', 'rincian_pekerjaan')) {
-                $table->dropColumn('rincian_pekerjaan');
-            }
-
-            if (Schema::hasColumn('penugasans', 'nomor_penugasan')) {
-                $table->dropColumn('nomor_penugasan');
-            }
-        });
+        Schema::dropIfExists('penugasans');
     }
 };

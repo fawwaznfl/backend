@@ -423,4 +423,17 @@ class RekapAbsensiSummaryController extends Controller
 
     protected $pegawaiId;
 
+    public function totalKasbonApprove($pegawaiId)
+    {
+        $total = \DB::table('kasbons')
+            ->where('pegawai_id', $pegawaiId)
+            ->where('status', 'approve')
+            ->sum('nominal');
+
+        return response()->json([
+            'total' => (float) $total
+        ]);
+    }
+
+
 }

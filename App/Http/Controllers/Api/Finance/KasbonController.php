@@ -5,9 +5,11 @@ namespace App\Http\Controllers\Api\Finance;
 use App\Helpers\ApiFormatter;
 use App\Http\Controllers\Controller;
 use App\Models\Kasbon;
+use App\Models\Pegawai;
 use App\Services\NotificationService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class KasbonController extends Controller
 {
@@ -66,6 +68,20 @@ class KasbonController extends Controller
         $validated['created_by'] = Auth::id();
         $validated['updated_by'] = Auth::id();
 
+        $pegawai = Pegawai::findOrFail($validated['pegawai_id']);
+
+        $kasbonInfo = $this->hitungSisaKasbon($pegawai);
+
+        if ($validated['nominal'] > $kasbonInfo['sisa']) {
+            return response()->json([
+                'message' => 'Nominal kasbon melebihi sisa limit',
+                'limit' => $kasbonInfo['limit'],
+                'terpakai' => $kasbonInfo['terpakai'],
+                'sisa' => $kasbonInfo['sisa'],
+            ], 422);
+        }
+
+
         $kasbon = Kasbon::create($validated);
 
         return response()->json(['message' => 'Kasbon dibuat', 'data' => $kasbon]);
@@ -80,20 +96,20 @@ class KasbonController extends Controller
 
     // Update
     public function updateStatus(Request $request, $id)
-{
-    $kasbon = Kasbon::findOrFail($id);
+    {
+        $kasbon = Kasbon::findOrFail($id);
 
-    $validated = $request->validate([
-        'status' => 'required|in:pending,approve,reject,paid'
-    ]);
+        $validated = $request->validate([
+            'status' => 'required|in:pending,approve,reject,paid'
+        ]);
 
-    $kasbon->update([
-        'status' => $validated['status'],
-        'updated_by' => Auth::id(),
-    ]);
+        $kasbon->update([
+            'status' => $validated['status'],
+            'updated_by' => Auth::id(),
+        ]);
 
-    return response()->json(['message' => 'Status updated']);
-}
+        return response()->json(['message' => 'Status updated']);
+    }
 
     public function approve($id)
     {
@@ -259,5 +275,27 @@ class KasbonController extends Controller
         return response()->json(['message' => 'Kasbon dibayar']);
     }
 
+    private function hitungSisaKasbon(Pegawai $pegawai)
+    {
+        $terpakai = Kasbon::where('pegawai_id', $pegawai->id)
+            ->where('status', 'approve')
+            ->sum('nominal');
+
+
+        return [
+            'limit' => $pegawai->saldo_kasbon,
+            'terpakai' => $terpakai,
+            'sisa' => max($pegawai->saldo_kasbon - $terpakai, 0),
+        ];
+    }
+
+    public function sisaKasbon()
+    {
+        $pegawai = auth()->user();
+
+        $data = $this->hitungSisaKasbon($pegawai);
+
+        return response()->json($data);
+    }
 
 }

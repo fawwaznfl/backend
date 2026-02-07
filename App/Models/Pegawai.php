@@ -27,7 +27,7 @@ class Pegawai extends Authenticatable
         'bonus_pribadi', 'bonus_team', 'bonus_jackpot', 'izin', 'terlambat',
         'mangkir', 'saldo_kasbon', 'status_pajak', 'tunjangan_bpjs_kesehatan', 'potongan_bpjs_kesehatan',
         'tunjangan_bpjs_ketenagakerjaan', 'potongan_bpjs_ketenagakerjaan','tunjangan_pajak', 'izin_cuti',
-        'izin_lainnya', 'izin_telat', 'izin_pulang_cepat', 'status',
+        'izin_lainnya', 'izin_telat', 'izin_pulang_cepat', 'status', 'kasbon_periode', 'terlambat_satuan',
         'dashboard_type', 'email_verified_at'
     ];
 
@@ -62,6 +62,8 @@ class Pegawai extends Authenticatable
     public function absensis(){return $this->hasMany(Absensi::class, 'pegawai_id');}
     public function faces(){return $this->hasMany(PegawaiFace::class);}
     public function pegawaiKeluar(){ return $this->hasOne(PegawaiKeluar::class, 'pegawai_id');}
+    public function kasbons() { return $this->hasMany(Kasbon::class, 'pegawai_id'); }
+
 
 
     public function rapats()

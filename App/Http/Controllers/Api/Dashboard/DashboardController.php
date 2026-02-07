@@ -210,6 +210,16 @@ class DashboardController extends Controller
             ->sum('nominal');
 
         /** =========================
+         * Total Payroll Bulan ini
+         * ========================= */
+        Carbon::setLocale('id');
+
+        $totalPayrollBulanIni = DB::table('payrolls')
+            ->where('bulan', $now->translatedFormat('F')) 
+            ->where('tahun', $now->year)
+            ->sum('gaji_diterima');
+
+        /** =========================
          * Total Reimbursement
          * ========================= */
 
@@ -225,7 +235,7 @@ class DashboardController extends Controller
             'alfa_bulan_ini'   => $totalAlfa,
             'libur_bulan_ini'   => $totalLibur,
             'lembur_bulan_ini'  => $totalLembur,
-            'kasbon_bulan_ini' => $totalKasbonBulanIni,
+            'payroll_bulan_ini' => $totalPayrollBulanIni,
             'reimbursement_bulan_ini' => $totalReimbursementBulanIni,
             'cuti_bulan_ini'    => $totalCuti,
             'sakit_bulan_ini'   => $totalSakit,

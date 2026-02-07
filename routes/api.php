@@ -37,10 +37,10 @@ use App\Http\Controllers\Api\Finance\TarifPphController;
 use App\Http\Controllers\Api\Finance\PayrollController;
 use App\Http\Controllers\Api\Finance\RekapAbsensiController;
 use App\Http\Controllers\Api\Finance\RekapPajakPegawaiController;
+use App\Http\Controllers\Api\ForgotPasswordController;
 use App\Http\Controllers\Api\ProfileController;
 use App\Http\Controllers\Api\RekapData\LaporanKerjaController;
 use App\Http\Controllers\Api\RekapData\RekapAbsensiSummaryController;
-use App\Http\Controllers\Api\RekapData\RekapDataController;
 
 /*
 |--------------------------------------------------------------------------
@@ -52,6 +52,7 @@ Route::prefix('v1')->group(function () {
     //  AUTH ROUTES
     Route::post('login', [AuthPegawaiController::class, 'login']);
     Route::post('register', [AuthPegawaiController::class, 'register']);
+    Route::get('/v1/public/companies', [CompanyController::class, 'publicList']);
     Route::post('logout', [AuthPegawaiController::class, 'logout'])->middleware('auth:sanctum');
 
     Route::middleware('auth:sanctum')->post(
@@ -63,6 +64,9 @@ Route::prefix('v1')->group(function () {
         '/profile',
         [\App\Http\Controllers\Api\ProfileController::class, 'profile']
     );
+
+    Route::post('/forgot-password', [ForgotPasswordController::class, 'verifyEmail']);  
+    Route::post('/reset-password', [ForgotPasswordController::class, 'resetPassword']);
 
     Route::get('/shifts/company/{id}', function ($id) {
             return \App\Models\Shift::where('company_id', $id)->get();
@@ -104,6 +108,8 @@ Route::prefix('v1')->group(function () {
 
         //payroll
         Route::get('/penggajian', [PayrollController::class, 'index']);
+        Route::get('/penggajian/{id}/pdf', [PayrollController::class, 'downloadPdf']);
+        Route::get('/penggajian/{id}/pdf-slip', [PayrollController::class, 'pdfSlip']);
 
         //Notifikasi
         Route::get('/notifications', [NotificationController::class, 'index']);
@@ -134,6 +140,9 @@ Route::prefix('v1')->group(function () {
 
         //Kunjungan
         Route::apiResource('kunjungan', KunjunganController::class); 
+
+        // Request Shift
+        Route::post('shift-mapping/request-new', [ShiftMappingController::class, 'requestNew']);
 
         //rapat
         Route::apiResource('rapat', RapatController::class); 
@@ -179,6 +188,7 @@ Route::prefix('v1')->group(function () {
 
         // Kategori Reimbursement 
         Route::apiResource('kategori-reimbursement', KategoriReimbursementController::class);
+        Route::get('/kasbon/sisa', [KasbonController::class, 'sisaKasbon']);
         Route::apiResource('kasbon', KasbonController::class);
 
         // Reimbursement
@@ -234,6 +244,8 @@ Route::prefix('v1')->group(function () {
         //Payroll
         Route::get('/payrolls/{id}/download', [PayrollController::class, 'download']);
         Route::get('/rekap-absensi/pegawai/{pegawaiId}',[RekapAbsensiController::class, 'rekapPegawai']);
+        Route::get('/kasbon/total-approve/{pegawai}', [KasbonController::class, 'totalKasbonApprove']);
+
 
         //Notifikasi
         Route::get('/notifications/unread-count', [NotificationController::class, 'unreadCount']);
@@ -283,6 +295,7 @@ Route::prefix('v1')->group(function () {
         Route::apiResource('pegawais', PegawaiController::class); 
         Route::apiResource('lokasis', LokasiController::class); 
         Route::delete('/absensi/{id}', [AbsensiController::class, 'destroy']);
+        Route::apiResource('companies', CompanyController::class);
 
 
         // HR 
@@ -315,6 +328,8 @@ Route::prefix('v1')->group(function () {
         //Payroll
         Route::get('/payrolls/{id}/download', [PayrollController::class, 'download']);
         Route::get('/rekap-absensi/pegawai/{pegawaiId}', [RekapAbsensiController::class, 'rekapPegawai']);
+        Route::get('/kasbon/total-approve/{pegawai}', [KasbonController::class, 'totalKasbonApprove']);
+
 
         // API RESOURCE
         Route::apiResource('shift-mapping', ShiftMappingController::class);
