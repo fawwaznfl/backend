@@ -33,8 +33,7 @@ return new class extends Migration
             $table->enum('gender', ['Laki-laki', 'Perempuan'])->nullable();
             $table->date('tgl_join')->nullable();
             $table->enum('status_nikah', [
-                'TK/0','TK/1','TK/2','TK/3',
-                'K0','K1','K2','K3'
+                'menikah','belum_menikah','janda','duda'
             ])->nullable();
             $table->text('alamat')->nullable();
 
@@ -91,9 +90,7 @@ return new class extends Migration
             $table->enum('dashboard_type', ['superadmin', 'admin', 'pegawai'])->default('pegawai');
             $table->enum('kasbon_periode', ['bulan', 'tahun'])->default('bulan');
             $table->enum('terlambat_satuan', ['hari', 'jam', 'menit'])
-              ->default('hari')
-              ->after('terlambat');
-
+              ->default('hari');
 
             $table->timestamps();
 

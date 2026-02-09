@@ -7,6 +7,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Validator;
 use App\Models\FaceEmbedding;
+use Illuminate\Support\Facades\Storage;
+use App\Models\Pegawai;
+
 
 class FaceController extends Controller
 {
@@ -27,8 +30,16 @@ class FaceController extends Controller
 
         try {
             $files = $request->file('files');
-            
-            // ✅ PERBAIKAN: asMultipart() + timeout 120 detik
+
+            // SIMPAN FOTO PERTAMA
+            $firstPhoto = $files[0];
+            $path = $firstPhoto->store('pegawai', 'public');
+
+            $pegawai = Pegawai::find($request->pegawai_id);
+            $pegawai->foto_karyawan = $path;
+            $pegawai->save();
+
+
             $response = Http::timeout(120)
                 ->asMultipart()
                 ->attach('files', file_get_contents($files[0]->getRealPath()), 'face1.jpg')

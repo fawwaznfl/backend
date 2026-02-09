@@ -38,7 +38,6 @@ class Absensi extends Model
         'approved_by',
 
         'created_by',
-        'updated_by',
     ];
 
     // === Relasi

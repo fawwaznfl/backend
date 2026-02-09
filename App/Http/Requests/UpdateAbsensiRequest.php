@@ -30,9 +30,6 @@ class UpdateAbsensiRequest extends FormRequest
             'approved_by' => 'nullable|exists:pegawais,id',
 
             'keterangan' => 'nullable|string',
-
-            'latitude' => 'nullable|numeric',
-            'longitude' => 'nullable|numeric',
         ];
     }
 }

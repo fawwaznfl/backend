@@ -5,7 +5,7 @@ use Illuminate\Http\Request;
 
 
 // Controllers
-use App\Http\Controllers\API\Attendance\{
+use App\Http\Controllers\Api\Attendance\{
     AbsensiController, CutiController, DinasLuarController, DinasLuarMappingController, KunjunganController, LemburController, PatroliController,
     ShiftMappingController
 };
@@ -16,23 +16,23 @@ use App\Http\Controllers\API\Core\{
 use App\Http\Controllers\Api\Dashboard\BirthdayCalendarController;
 use App\Http\Controllers\Api\Dashboard\DashboardController;
 use App\Http\Controllers\Api\Dashboard\SakitCalendarController;
-use App\Http\Controllers\API\FaceController;
-use App\Http\Controllers\API\HR\{
+use App\Http\Controllers\Api\FaceController;
+use App\Http\Controllers\Api\HR\{
     KontrakController, PegawaiKeluarController, DokumenPegawaiController
 };
-use App\Http\Controllers\API\Performance\{
+use App\Http\Controllers\Api\Performance\{
     JenisKinerjaController, TargetKinerjaController
 };
-use App\Http\Controllers\API\Info\{
+use App\Http\Controllers\Api\Info\{
     NotifikasiController, PenugasanController, RapatController, BeritaController,
     NotificationController
 };
-use App\Http\Controllers\API\Inventory\InventoryController;
+use App\Http\Controllers\Api\Inventory\InventoryController;
 use App\Http\Controllers\CompanyController;
-use App\Http\Controllers\API\Finance\KasbonController;
-use App\Http\Controllers\API\Finance\KategoriReimbursementController;
-use App\Http\Controllers\API\Finance\ReimbursementController;
-use App\Http\Controllers\API\Finance\RekapPengajuanKeuanganController;
+use App\Http\Controllers\Api\Finance\KasbonController;
+use App\Http\Controllers\Api\Finance\KategoriReimbursementController;
+use App\Http\Controllers\Api\Finance\ReimbursementController;
+use App\Http\Controllers\Api\Finance\RekapPengajuanKeuanganController;
 use App\Http\Controllers\Api\Finance\TarifPphController;
 use App\Http\Controllers\Api\Finance\PayrollController;
 use App\Http\Controllers\Api\Finance\RekapAbsensiController;
